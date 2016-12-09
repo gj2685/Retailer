@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>Electronics</item>
+        <item>Furniture</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+    </string-array>
+    
+    <string-array name="products0">
+        <item>Microwave Oven</item>
+        <item>Television</item>
+        <item>Vacuum Cleaner</item>
+        <item>Lorem ipsum</item>
+    </string-array>
+    
+    <string-array name="products1">
+        <item>Table</item>
+        <item>Chair</item>
+        <item>Almirah</item>
+        <item>Lorem ipsum</item>
+	</string-array>
+	
+    <string-array name="products2">
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+	</string-array>
+	
+    <string-array name="products3">
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+	</string-array>
+	
+    <integer-array name="products0_img">
+        <item>@drawable/img_oven</item>
+        <item>@drawable/img_television</item>
+        <item>@drawable/img_vacuum_cleaner</item>
+        <item>@drawable/img_lorem</item>
+    </integer-array>
+    
+    <integer-array name="products1_img">
+        <item>@drawable/img_table</item>
+        <item>@drawable/img_chair</item>
+        <item>@drawable/img_almirah</item>
+        <item>@drawable/img_lorem</item>
+    </integer-array>
+    
+    <integer-array name="products2_img">
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+    </integer-array>
+    
+    <integer-array name="products3_img">
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+        <item>@drawable/img_lorem</item>
+    </integer-array>
+    
+</resources>
