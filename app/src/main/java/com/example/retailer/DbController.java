@@ -8,6 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 
+import com.example.retailer.DbContentDescriptor.CartTable;
+import com.example.retailer.DbContentDescriptor.CategoryTable;
+import com.example.retailer.DbContentDescriptor.ProductTable;
 import com.example.retailer.model.Category;
 import com.example.retailer.model.Product;
 
@@ -17,9 +20,9 @@ public class DbController {
 
     private static final DbController sController = new DbController();
     private static final String[] CATEGORY_PROJECTION = new String[]{
-            DbContentDescriptor.CategoryTable.Cols.ID,
-            DbContentDescriptor.CategoryTable.Cols.CAT_NAME,
-            DbContentDescriptor.CategoryTable.Cols.CAT_ICON};
+            CategoryTable.Cols.ID,
+            CategoryTable.Cols.CAT_NAME,
+            CategoryTable.Cols.CAT_ICON};
     private Activity mActivity;
     private DbOpenHelper mOpenHelper;
 
@@ -44,10 +47,10 @@ public class DbController {
 
         for (int i = 0; i < len; i++) {
             values[i] = new ContentValues();
-            values[i].put(DbContentDescriptor.CategoryTable.Cols.CAT_NAME, categories[i]);
+            values[i].put(CategoryTable.Cols.CAT_NAME, categories[i]);
         }
 
-        mOpenHelper.bulkInsert(DbContentDescriptor.CategoryTable.CONTENT_URI, values);
+        mOpenHelper.bulkInsert(CategoryTable.CONTENT_URI, values);
         fillProductList(len);
     }
 
@@ -74,16 +77,16 @@ public class DbController {
 
             for (int i = 0; i < len; i++) {
                 values[i] = new ContentValues();
-                values[i].put(DbContentDescriptor.ProductTable.Cols.PROD_NAME, products[x][i]);
+                values[i].put(ProductTable.Cols.PROD_NAME, products[x][i]);
                 double price = Math.random() * 400;
                 price = ((int) (price * 100)) / 100.0; // rounding upto 2 decimals
-                values[i].put(DbContentDescriptor.ProductTable.Cols.PROD_PRICE, price);
-                values[i].put(DbContentDescriptor.ProductTable.Cols.CAT_ID, x + 1);
-                values[i].put(DbContentDescriptor.ProductTable.Cols.PROD_IMG_URL,
+                values[i].put(ProductTable.Cols.PROD_PRICE, price);
+                values[i].put(ProductTable.Cols.CAT_ID, x + 1);
+                values[i].put(ProductTable.Cols.PROD_IMG_URL,
                         productsImg[x].getResourceId(i, 0));
             }
 
-            mOpenHelper.bulkInsert(DbContentDescriptor.ProductTable.CONTENT_URI, values);
+            mOpenHelper.bulkInsert(ProductTable.CONTENT_URI, values);
             productsImg[x].recycle();
         }
     }
@@ -92,16 +95,16 @@ public class DbController {
         ArrayList<Category> catList = new ArrayList<Category>();
         Cursor cursor = null;
         try {
-            cursor = mOpenHelper.query(DbContentDescriptor.CategoryTable.CONTENT_URI,
+            cursor = mOpenHelper.query(CategoryTable.CONTENT_URI,
                     CATEGORY_PROJECTION, null, null, null);
 
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(
-                            cursor.getColumnIndex(DbContentDescriptor.CategoryTable.Cols.ID));
+                            cursor.getColumnIndex(CategoryTable.Cols.ID));
 
                     String catName = cursor.getString(
-                            cursor.getColumnIndex(DbContentDescriptor.CategoryTable.Cols.CAT_NAME));
+                            cursor.getColumnIndex(CategoryTable.Cols.CAT_NAME));
 
                     Category info = new Category();
                     info.setName(catName);
@@ -128,12 +131,12 @@ public class DbController {
     public ArrayList<Product> getProductList(int catId) {
         ArrayList<Product> prodList = new ArrayList<Product>();
 
-        String where = DbContentDescriptor.ProductTable.Cols.CAT_ID + "=" + catId;
+        String where = ProductTable.Cols.CAT_ID + "=" + catId;
         Cursor cursor = null;
         try {
             cursor = mOpenHelper.query(
-                    DbContentDescriptor.ProductTable.CONTENT_URI,
-                    null, where, null, DbContentDescriptor.ProductTable.Cols.PROD_NAME + " ASC");
+                    ProductTable.CONTENT_URI,
+                    null, where, null, ProductTable.Cols.PROD_NAME + " ASC");
 
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -152,17 +155,17 @@ public class DbController {
 
     private Product getProductInfo(Cursor cursor) {
         int id = cursor.getInt(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.ID));
+                cursor.getColumnIndex(ProductTable.Cols.ID));
         int catId = cursor.getInt(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.CAT_ID));
+                cursor.getColumnIndex(ProductTable.Cols.CAT_ID));
         String prodName = cursor.getString(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.PROD_NAME));
+                cursor.getColumnIndex(ProductTable.Cols.PROD_NAME));
         String prodDesc = cursor.getString(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.PROD_DESC));
+                cursor.getColumnIndex(ProductTable.Cols.PROD_DESC));
         double prodPrice = cursor.getDouble(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.PROD_PRICE));
+                cursor.getColumnIndex(ProductTable.Cols.PROD_PRICE));
         int prodUrl = cursor.getInt(
-                cursor.getColumnIndex(DbContentDescriptor.ProductTable.Cols.PROD_IMG_URL));
+                cursor.getColumnIndex(ProductTable.Cols.PROD_IMG_URL));
 
         Product info = new Product();
         info.setCategoryId(catId);
@@ -175,28 +178,28 @@ public class DbController {
     }
 
     public Cursor getProductInfo(int Id) {
-        String join = DbContentDescriptor.ProductTable.NAME + " left join " +
-                DbContentDescriptor.CartTable.NAME + " on " +
-                DbContentDescriptor.ProductTable.NAME + "." +
-                DbContentDescriptor.ProductTable.Cols.ID + " = " +
-                DbContentDescriptor.CartTable.NAME + "." +
-                DbContentDescriptor.CartTable.Cols.PROD_ID;
+        String join = ProductTable.NAME + " left join " +
+                CartTable.NAME + " on " +
+                ProductTable.NAME + "." +
+                ProductTable.Cols.ID + " = " +
+                CartTable.NAME + "." +
+                CartTable.Cols.PROD_ID;
 
-        Uri uri = DbContentDescriptor.ProductTable.CONTENT_URI.buildUpon()
+        Uri uri = ProductTable.CONTENT_URI.buildUpon()
                 .appendQueryParameter(Utility.JOIN, join).build();
 
-        String where = DbContentDescriptor.ProductTable.NAME + "." +
-                DbContentDescriptor.ProductTable.Cols.ID + "=" + Id;
+        String where = ProductTable.NAME + "." +
+                ProductTable.Cols.ID + "=" + Id;
         Cursor cursor = mOpenHelper.query(uri, null, where, null, null);
         return cursor;
     }
 
     public boolean addProductToCart(int id) {
         ContentValues values = new ContentValues();
-        values.put(DbContentDescriptor.CartTable.Cols.PROD_ID, id);
-        values.put(DbContentDescriptor.CartTable.Cols.PROD_COUNT, 1);
+        values.put(CartTable.Cols.PROD_ID, id);
+        values.put(CartTable.Cols.PROD_COUNT, 1);
 
-        Uri uri = mOpenHelper.insert(DbContentDescriptor.CartTable.CONTENT_URI, values);
+        Uri uri = mOpenHelper.insert(CartTable.CONTENT_URI, values);
         int rowId = Integer.parseInt(uri.getLastPathSegment());
         if (rowId != -1)
             return true;
@@ -205,16 +208,16 @@ public class DbController {
 
     public Cursor[] getCartInfo() {
         Cursor[] cursors = new Cursor[2];
-        String join = DbContentDescriptor.CartTable.NAME + " join " +
-                DbContentDescriptor.ProductTable.NAME + " on " +
-                DbContentDescriptor.ProductTable.NAME + "." +
-                DbContentDescriptor.ProductTable.Cols.ID + " = " +
-                DbContentDescriptor.CartTable.NAME + "." +
-                DbContentDescriptor.CartTable.Cols.PROD_ID;
+        String join = CartTable.NAME + " join " +
+                ProductTable.NAME + " on " +
+                ProductTable.NAME + "." +
+                ProductTable.Cols.ID + " = " +
+                CartTable.NAME + "." +
+                CartTable.Cols.PROD_ID;
         String[] sumProjection = {
-                "SUM(" + DbContentDescriptor.ProductTable.Cols.PROD_PRICE + ") as " + Utility.TOTAL};
+                "SUM(" + ProductTable.Cols.PROD_PRICE + ") as " + Utility.TOTAL};
 
-        Uri uri = DbContentDescriptor.CartTable.CONTENT_URI.buildUpon()
+        Uri uri = CartTable.CONTENT_URI.buildUpon()
                 .appendQueryParameter(Utility.JOIN, join).build();
 
         cursors[0] = mOpenHelper.query(uri, null, null, null, null);
@@ -223,8 +226,8 @@ public class DbController {
     }
 
     public boolean removeFromCart(int prodId) {
-        String where = DbContentDescriptor.CartTable.Cols.PROD_ID + "=" + prodId;
-        int count = mOpenHelper.delete(DbContentDescriptor.CartTable.CONTENT_URI, where, null);
+        String where = CartTable.Cols.PROD_ID + "=" + prodId;
+        int count = mOpenHelper.delete(CartTable.CONTENT_URI, where, null);
         if (count > 0)
             return true;
         return false;

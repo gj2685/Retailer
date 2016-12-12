@@ -24,6 +24,7 @@ public class ProductDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utility.Logd("ProductDetailsActivity : onCreate");
 
         setContentView(R.layout.activity_product_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -33,6 +34,7 @@ public class ProductDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Utility.Logd("ProductDetailsActivity : onResume");
         int prodID = getIntent().getIntExtra(Utility.PRODUCT_ID, 1);
         init(prodID);
     }
@@ -40,6 +42,7 @@ public class ProductDetailsActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Utility.Logd("ProductDetailsActivity : onNewIntent");
         setIntent(intent);
     }
 
@@ -106,7 +109,43 @@ public class ProductDetailsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Utility.Logd("ProductDetailsActivity : onCreateOptionsMenu");
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Utility.Logd("ProductDetailsActivity : onPrepareOptionsMenu");
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Utility.Logd("ProductDetailsActivity : onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Utility.Logd("ProductDetailsActivity : onRestart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utility.Logd("ProductDetailsActivity : onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Utility.Logd("ProductDetailsActivity : onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Utility.Logd("ProductDetailsActivity : onDestroy");
+    }
 }
